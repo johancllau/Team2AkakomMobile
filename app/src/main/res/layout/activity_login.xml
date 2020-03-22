@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_bg_login"
+    tools:context=".ui.activity.LoginActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/imageViewLogoLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_125sdp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/ic_logo"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textViewEmailPasswordWrong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="@id/textInputLayoutEmailLogin"
+                app:layout_constraintEnd_toEndOf="@id/textInputLayoutEmailLogin"
+                app:layout_constraintBottom_toTopOf="@id/textInputLayoutEmailLogin"
+                android:text="@string/text_email_password_incorrect"
+                android:textSize="18sp"
+                android:textColor="#D50000"
+                android:fontFamily="@font/roboto_regular"
+                android:visibility="gone"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutEmailLogin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginTop="@dimen/_130sdp"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="12dp"
+                app:layout_constraintStart_toStartOf="@id/imageViewLogoLogin"
+                app:layout_constraintEnd_toEndOf="@id/imageViewLogoLogin"
+                app:layout_constraintTop_toBottomOf="@id/imageViewLogoLogin"
+                android:background="@drawable/bg_white_full_rad100"
+                android:backgroundTint="@null"
+                app:errorEnabled="true"
+                app:errorTextColor="#D50000">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextEmailLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:background="@null"
+                    android:backgroundTint="@null"
+                    android:hint="@string/text_label_email"
+                    android:inputType="textEmailAddress" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textInputLayoutPasswordLogin"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:paddingStart="@dimen/_12sdp"
+                android:paddingEnd="12dp"
+                app:layout_constraintStart_toStartOf="@id/imageViewLogoLogin"
+                app:layout_constraintEnd_toEndOf="@id/imageViewLogoLogin"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutEmailLogin"
+                android:background="@drawable/bg_white_full_rad100"
+                android:backgroundTint="@null"
+                app:passwordToggleEnabled="true"
+                app:errorEnabled="true" >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTextPasswordLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:background="@null"
+                    android:backgroundTint="@null"
+                    android:hint="@string/text_label_password"
+                    android:inputType="textPassword"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                app:layout_constraintStart_toStartOf="@id/imageViewLogoLogin"
+                app:layout_constraintEnd_toEndOf="@id/imageViewLogoLogin"
+                app:layout_constraintTop_toBottomOf="@id/textInputLayoutPasswordLogin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:background="@drawable/ic_login_button" />
+
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:layout_constraintStart_toStartOf="@id/textViewEmailPasswordWrong"
+                app:layout_constraintEnd_toEndOf="@id/textViewEmailPasswordWrong"
+                app:layout_constraintBottom_toTopOf="@id/textInputLayoutEmailLogin"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
