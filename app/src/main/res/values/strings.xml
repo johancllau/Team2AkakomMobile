@@ -1,12 +1,22 @@
 <resources>
     <string name="app_name" translatable="false">E-commerce</string>
 
-<!--    label-->
+    <!--    label-->
     <string name="text_label_email">E-mail</string>
     <string name="text_label_password">Password</string>
+    <string name="text_label_login">Login</string>
+    <string name="text_label_logout">Log Out</string>
     <string name="text_label_email_empty">E-mail cannot be empty</string>
     <string name="text_label_password_empty">Password cannot be empty</string>
-    <string name="text__label_email_invalid">Invalid e-mail address</string>
+    <string name="text_label_email_invalid">Invalid e-mail address</string>
+    <string name="text_label_or">Or</string>
+    <string name="text_label_sign_in_with_google">Sign In With Google</string>
+
+    <string name="text_labeL_setting">Setting</string>
+    <string name="text_label_profile">Profile</string>
+
 
     <string name="text_email_password_incorrect">Email/password incorrect</string>
+
+
 </resources>
