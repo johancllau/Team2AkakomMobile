@@ -146,7 +146,19 @@
                 app:layout_constraintStart_toStartOf="@id/imageViewLogoLogin"
                 app:layout_constraintEnd_toEndOf="@id/imageViewLogoLogin"
                 style="@style/AppTheme.ButtonLogin"
+                app:elevation="@dimen/_220sdp"
                 android:text="@string/text_label_login"/>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:layout_constraintTop_toTopOf="@id/textViewLabelOr"
+                app:layout_constraintStart_toStartOf="@id/buttonLogin"
+                app:layout_constraintEnd_toStartOf="@id/textViewLabelOr"
+                app:layout_constraintBottom_toBottomOf="@id/textViewLabelOr"
+                android:background="#C1BCC7"/>
 
             <TextView
                 android:id="@+id/textViewLabelOr"
@@ -156,6 +168,17 @@
                 app:layout_constraintStart_toStartOf="@id/buttonLogin"
                 app:layout_constraintEnd_toEndOf="@id/buttonLogin"
                 android:text="@string/text_label_or" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:layout_constraintTop_toTopOf="@id/textViewLabelOr"
+                app:layout_constraintStart_toEndOf="@id/textViewLabelOr"
+                app:layout_constraintEnd_toEndOf="@id/buttonLogin"
+                app:layout_constraintBottom_toBottomOf="@id/textViewLabelOr"
+                android:background="#C1BCC7"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonLoginGoogle"
@@ -170,14 +193,15 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="@style/Widget.MaterialComponents.Button"
                 app:cornerRadius="@dimen/_18sdp"
-                android:backgroundTint="#ADFFFFFF"
-                app:elevation="@dimen/_50sdp"
+                android:backgroundTint="#F5F1F1"
+                app:elevation="@dimen/_220sdp"
                 app:icon="@drawable/ic_signin_google"
                 app:iconGravity="textStart"
                 app:iconTint="@null"
                 android:text="@string/text_label_sign_in_with_google"
                 android:textColor="@color/blackWarm"
-                android:textAllCaps="false"/>
+                android:textAllCaps="false"
+                tools:targetApi="p" />
 
             <ProgressBar
                 android:id="@+id/progressBarLogin"

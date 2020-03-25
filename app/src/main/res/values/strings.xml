@@ -17,6 +17,7 @@
 
 
     <string name="text_email_password_incorrect">Email/password incorrect</string>
+    <string name="text_internet_not_connect">Please make sure your internet connect to internet</string>
 
 
 </resources>

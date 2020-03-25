@@ -6,16 +6,30 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.gson.Gson
 import com.neox.neoxdev.ecommerce.R
+import com.neox.neoxdev.ecommerce.model.user.Profile
 import com.neox.neoxdev.ecommerce.util.SharedPreferencesStorage
+import com.neox.neoxdev.ecommerce.util.toast
 import com.neox.neoxdev.ecommerce.viewmodel.LoginActivityViewModel
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+    
+    companion object {
+        private const val SIGN_IN_GOOGLE_REQUEST_CODE = 101
+    }
+
+    private lateinit var googleSignInClient: GoogleSignInClient
 
     private lateinit var loginActivityViewModel: LoginActivityViewModel
 
@@ -26,33 +40,36 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        googleSignInClient = GoogleSignIn.getClient(this, gso)
+
         loginActivityViewModel = ViewModelProvider(this).get(LoginActivityViewModel::class.java)
 
         validateLogin()
-
         observeData()
+
     }
 
     private fun observeData() {
         loginActivityViewModel.login().observe(this, Observer {
-
+            showProgress(false)
+            
             if (it != null) {
                 if (it.data != null) {
                     val sharedPreferences = SharedPreferencesStorage(this)
-
                     sharedPreferences.login = true
                     sharedPreferences.userData = Gson().toJson(it.data.profile)
-
-                    progressBarLogin.visibility = View.GONE
+                    
                     startActivity(
                         Intent(this, MainActivity::class.java)
                     )
                     finish()
 
                 } else {
-                    progressBarLogin.visibility = View.GONE
-                    textViewEmailPasswordWrong.visibility = View.VISIBLE
-
+                    showTextEmailPassIncorrect(true)
                     textInputLayoutEmailLogin.error = getString(R.string.text_label_email_invalid)
                     textInputLayoutEmailLogin.errorIconDrawable = null
                     textInputLayoutPasswordLogin.error = getString(R.string.text_label_password_empty)
@@ -61,20 +78,12 @@ class LoginActivity : AppCompatActivity() {
                     textInputLayoutEmailLogin.clearFocus()
                     textInputLayoutPasswordLogin.clearFocus()
                 }
-
             } else {
-                progressBarLogin.visibility = View.GONE
-                Toast.makeText(
-                    this,
-                    "Please make sure your internet connect to internet",
-                    Toast.LENGTH_LONG
-                ).show()
-
+                getString(R.string.text_internet_not_connect).toast(this)
+                
                 textInputLayoutEmailLogin.clearFocus()
                 textInputLayoutPasswordLogin.clearFocus()
-
             }
-
         })
     }
 
@@ -86,7 +95,7 @@ class LoginActivity : AppCompatActivity() {
             }
 
             override fun afterTextChanged(p0: Editable?) {
-                if (isEmailValid(p0.toString().trim())) {
+                if (isValidEmail(p0.toString().trim())) {
                     email = p0.toString()
 
                     textInputLayoutEmailLogin.error = null
@@ -120,8 +129,8 @@ class LoginActivity : AppCompatActivity() {
         buttonLogin.setOnClickListener {
                 if (email != null ) {
                     if(password != null) {
-                        textViewEmailPasswordWrong.visibility = View.GONE
-                        progressBarLogin.visibility = View.VISIBLE
+                        showTextEmailPassIncorrect(false)
+                        showProgress(true)
 
                         loginActivityViewModel.userLogin(email!!, password!!)
                     } else {
@@ -134,10 +143,89 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
+        buttonLoginGoogle.setOnClickListener {
+            showProgress(true)
+            startActivityForResult(googleSignInClient.signInIntent, SIGN_IN_GOOGLE_REQUEST_CODE)
+        }
+
     }
 
-    private fun isEmailValid(email: String): Boolean {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == SIGN_IN_GOOGLE_REQUEST_CODE) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let {
+                    firebaseAuthWithGoogle(it)
+                }
+            } catch (e: ApiException) {
+                showProgress(false)
+                getString(R.string.text_internet_not_connect).toast(this)
+               e.printStackTrace()
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(userAccount: GoogleSignInAccount) {
+        val credential = GoogleAuthProvider.getCredential(userAccount.idToken, null)
+        val auth = FirebaseAuth.getInstance()
+
+        auth.signInWithCredential(credential)
+            .addOnCompleteListener(this) {task ->
+                showProgress(false)
+                if (task.isSuccessful) {
+                    val id = auth.currentUser?.uid
+                    val email = auth.currentUser?.email
+                    val name = auth.currentUser?.displayName
+
+                    if (id != null && email != null && name != null) {
+                        val profile = Profile(
+                            email,
+                            id,
+                            "25-02-2020",
+                            name
+                        )
+                        val sharedPreferences = SharedPreferencesStorage(this)
+
+                        sharedPreferences.login = true
+                        sharedPreferences.userData = Gson().toJson(profile)
+                        startActivity(
+                            Intent(this, MainActivity::class.java)
+                        )
+                        finish()
+                    } else {
+                        "Login failed".toast(this)
+                    }
+                } else {
+                    "Login failed".toast(this)
+                }
+            }
+            .addOnFailureListener {
+                showProgress(false)
+                it.printStackTrace()
+            }
+    }
+
+    private fun isValidEmail(email: String): Boolean {
         val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
         return emailRegex.toRegex().matches(email)
+    }
+
+    private fun showTextEmailPassIncorrect(show: Boolean) {
+        if (show) {
+            textViewEmailPasswordWrong.visibility = View.VISIBLE
+        } else {
+            textViewEmailPasswordWrong.visibility = View.GONE
+        }
+    }
+
+    private fun showProgress(show: Boolean) {
+        if (show) {
+            progressBarLogin.visibility = View.VISIBLE
+        } else {
+            progressBarLogin.visibility = View.GONE
+        }
     }
 }

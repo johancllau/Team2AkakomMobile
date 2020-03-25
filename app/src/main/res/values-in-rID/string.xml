@@ -16,5 +16,6 @@
     <string name="text_label_profile">Profil</string>
 
     <string name="text_email_password_incorrect">E-mail dan password tidak cocok</string>
+    <string name="text_internet_not_connect">Koneksi internet terputus</string>
 
 </resources>

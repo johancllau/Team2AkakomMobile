@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.neox.neoxdev.ecommerce.R
 import com.neox.neoxdev.ecommerce.model.user.Profile
@@ -44,6 +45,11 @@ class MainActivity : AppCompatActivity() {
     private fun logOut() {
         sharedPreferences.login = false
         sharedPreferences.userData = ""
+
+        val auth  = FirebaseAuth.getInstance()
+        if (auth.currentUser != null) {
+            auth.signOut()
+        }
 
         startActivity(
             Intent(this, LoginActivity::class.java)

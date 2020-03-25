@@ -1,6 +1,5 @@
 package com.neox.neoxdev.ecommerce.model.user
 
-
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
